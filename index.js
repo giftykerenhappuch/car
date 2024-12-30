@@ -3,10 +3,13 @@ const mongoose = require('mongoose');
 const path = require('path'); // Require path module to handle file paths properly
 
 const app = express();
-const port = 3001;
 
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://giftykerenhappuchcug22it:kerenhait7@car.a3zwv.mongodb.net/', { 
+// Use Render's dynamic PORT if available
+const port = process.env.PORT || 3001;
+
+// Connect to MongoDB using the MONGO_URI from environment variables
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://giftykerenhappuchcug22it:kerenhait7@car.a3zwv.mongodb.net/';
+mongoose.connect(MONGO_URI, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 })
@@ -58,5 +61,5 @@ app.post('/api/cars', async (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
