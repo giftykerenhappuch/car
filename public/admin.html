@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and Font Styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 0 20px;
+}
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+}
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 18px;
+}
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+.navbar .logo img {
+    height: 40px;
+}
+
+/* Header Styling */
+h2 {
+    color: #333;
+    margin: 20px 0;
+}
+
+/* Form Styles (Admin Login Page) */
+form {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 400px;
+    border-radius: 10px;
+}
+form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+form button:hover {
+    background-color: #555;
+}
+
+/* Car Listings Styles */
+input[type="text"] {
+    padding: 10px;
+    width: 100%;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#carList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+.car-item {
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    text-align: center;
+}
+.car-item img {
+    width: 100%;
+    max-width: 100px;
+    height: auto;
+}
+.car-item p {
+    margin: 5px 0;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Navbar Section -->
+    <div class="navbar">
+        <div>
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+        </div>
+    </div>
+
+    <h2>Admin Login</h2>
+    <form id="adminForm">
+        <input type="text" id="carName" placeholder="Car Name" required>
+        <input type="text" id="ownerName" placeholder="Owner Name" required>
+        <input type="text" id="carType" placeholder="Car Type" required>
+        <input type="number" id="price" placeholder="Price" required>
+        <input type="file" id="image" accept="image/*" required>
+        <button type="submit">Add Car</button>
+    </form>
+
+    <script>
+        document.getElementById('adminForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let carName = document.getElementById('carName').value;
+            let ownerName = document.getElementById('ownerName').value;
+            let carType = document.getElementById('carType').value;
+            let price = document.getElementById('price').value;
+            let image = document.getElementById('image').files[0];
+
+            // Store car data in localStorage
+            let cars = JSON.parse(localStorage.getItem('cars')) || [];
+            let reader = new FileReader();
+
+            reader.onloadend = function () {
+                cars.push({
+                    carName, 
+                    ownerName, 
+                    carType, 
+                    price, 
+                    image: reader.result
+                });
+
+                localStorage.setItem('cars', JSON.stringify(cars));
+                alert("Car details added successfully!");
+            }
+            if (image) reader.readAsDataURL(image);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Listings</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and Font Styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 0 20px;
+}
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+}
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 18px;
+}
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+.navbar .logo img {
+    height: 40px;
+}
+
+/* Header Styling */
+h2 {
+    color: #333;
+    margin: 20px 0;
+}
+
+/* Form Styles (Admin Login Page) */
+form {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 400px;
+    border-radius: 10px;
+}
+form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+form button:hover {
+    background-color: #555;
+}
+
+/* Car Listings Styles */
+input[type="text"] {
+    padding: 10px;
+    width: 100%;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#carList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+.car-item {
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    text-align: center;
+}
+.car-item img {
+    width: 100%;
+    max-width: 100px;
+    height: auto;
+}
+.car-item p {
+    margin: 5px 0;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Navbar Section -->
+    <div class="navbar">
+        <div>
+            <a href="index.html">Home</a>
+            <a href="admin.html">Admin Login</a>
+        </div>
+    </div>
+
+    <h2>Car Listings</h2>
+
+    <input type="text" id="searchInput" placeholder="Search Cars by Name" onkeyup="searchCars()">
+    <div id="carList"></div>
+
+    <script>
+        let allCars = [];
+
+        // Fetch all cars from the server
+        async function fetchCars() {
+            try {
+                const response = await fetch('http://localhost:3000/api/cars');
+                const cars = await response.json();
+                allCars = cars;
+                displayCars(cars);
+            } catch (error) {
+                console.log('Error fetching cars:', error);
+            }
+        }
+
+        // Function to display car listings
+        function displayCars(cars) {
+            let carList = document.getElementById('carList');
+            carList.innerHTML = "";  // Clear previous list of cars
+
+            cars.forEach(car => {
+                let carElement = document.createElement('div');
+                carElement.classList.add('car-item');
+                
+                carElement.innerHTML = `
+                    <img src="${car.image}" alt="${car.carName}" width="100">
+                    <p><strong>Car Name:</strong> ${car.carName}</p>
+                    <p><strong>Owner Name:</strong> ${car.ownerName}</p>
+                    <p><strong>Car Type:</strong> ${car.carType}</p>
+                    <p><strong>Price:</strong> $${car.price}</p>
+                `;
+
+                carList.appendChild(carElement);
+            });
+        }
+
+        // Function to filter cars by search term
+        function searchCars() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let filteredCars = allCars.filter(car => car.carName.toLowerCase().includes(input));
+
+            // Sort cars by price in ascending order
+            filteredCars.sort((a, b) => a.price - b.price);
+
+            displayCars(filteredCars);
+        }
+
+        window.onload = function () {
+            fetchCars();  // Load all cars from backend on page load
+        }
+    </script>
+</body>
+</html>
