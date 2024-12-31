@@ -107,7 +107,6 @@ input[type="text"] {
 .car-item p {
     margin: 5px 0;
 }
-
     </style>
 </head>
 <body>
@@ -126,11 +125,11 @@ input[type="text"] {
 
     <script>
         let allCars = [];
-
+        
         // Fetch all cars from the server
         async function fetchCars() {
             try {
-                const response = await fetch('http://localhost:3000/api/cars');
+                const response = await fetch('http://localhost:3001/api/cars');
                 const cars = await response.json();
                 allCars = cars;
                 displayCars(cars);

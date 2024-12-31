@@ -130,33 +130,39 @@ input[type="text"] {
     </form>
 
     <script>
-        document.getElementById('adminForm').addEventListener('submit', function(event) {
-            event.preventDefault();
 
-            let carName = document.getElementById('carName').value;
-            let ownerName = document.getElementById('ownerName').value;
-            let carType = document.getElementById('carType').value;
-            let price = document.getElementById('price').value;
-            let image = document.getElementById('image').files[0];
+    document.getElementById('adminForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-            // Store car data in localStorage
-            let cars = JSON.parse(localStorage.getItem('cars')) || [];
-            let reader = new FileReader();
+        let carName = document.getElementById('carName').value;
+        let ownerName = document.getElementById('ownerName').value;
+        let carType = document.getElementById('carType').value;
+        let price = document.getElementById('price').value;
+        let image = document.getElementById('image').files[0];
 
-            reader.onloadend = function () {
-                cars.push({
-                    carName, 
-                    ownerName, 
-                    carType, 
-                    price, 
-                    image: reader.result
-                });
+        let formData = new FormData();
+        formData.append("carName", carName);
+        formData.append("ownerName", ownerName);
+        formData.append("carType", carType);
+        formData.append("price", price);
+        formData.append("image", image);
 
-                localStorage.setItem('cars', JSON.stringify(cars));
-                alert("Car details added successfully!");
-            }
-            if (image) reader.readAsDataURL(image);
+        // Make the fetch API request to the backend
+        fetch('/api/cars', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("Car details added successfully!");
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Error adding car details.");
         });
+    });
+
+
     </script>
 </body>
 </html>
